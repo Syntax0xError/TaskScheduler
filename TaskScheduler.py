@@ -72,3 +72,10 @@ class TaskScheduler:
         task = Task(target, *args)
         self.tasks.append(task)
         return task
+
+    def run_all_tasks(self) -> None:
+        """
+        Run all tasks in the scheduler.
+        """
+        for task in self.tasks:
+            task.run()

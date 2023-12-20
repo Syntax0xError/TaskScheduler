@@ -1,49 +1,47 @@
 # Task Scheduler
 
-A simple Python task scheduler for running tasks at specified intervals.
-
-## Introduction
-
-The Task Scheduler is a Python module that allows you to schedule and run tasks at specific intervals. It currently supports a `daily` method for running tasks every day.
-
-## Features
-
-- Schedule and run tasks at daily intervals.
-- Easy-to-use API for creating and managing tasks.
-
-## Installation
-
-No installation is required. Simply include the `taskscheduler.py` module in your project.
+A simple Python task scheduler that supports daily tasks with additional performance benefits due to the use of thread sleeping.
 
 ## Usage
 
-1. Import the `TaskScheduler` class:
+### Task Class
 
-    ```python
-    from taskscheduler import TaskScheduler
-    ```
+#### `Task(target, *args)`
 
-2. Create an instance of `TaskScheduler`:
+- `target`: The function or method to be executed by the task.
+- `*args`: Arguments to be passed to the target function.
 
-    ```python
-    scheduler = TaskScheduler()
-    ```
+#### `parse_time(date) -> datetime`
 
-3. Create a task using the `create` method. Currently, only the `daily` method is supported:
+Parses the input date and returns a datetime object.
 
-    ```python
-    task = scheduler.daily(target_function, *args, recur_every=1)
-    ```
+#### `run()`
 
-    - `target_function`: The function to be executed daily.
-    - `*args`: Arguments to be passed to the target function.
-    - `recur_every`: Number of days between each iteration (default is 1).
+Executes the task by calling the target function with the provided arguments.
 
-4. Run all scheduled tasks:
+#### `daily(start_date: str | datetime, recur_every: int = 1)`
 
-    ```python
-    scheduler.run_all_tasks()
-    ```
+Run a daily task starting from a specified date.
+
+- `start_date` (str | datetime): The starting date for the daily task. It can be a string in a recognizable format or a datetime object.
+- `recur_every` (int): Number of days between each iteration. Default is 1.
+
+### TaskScheduler Class
+
+#### `TaskScheduler()`
+
+Initializes a task scheduler.
+
+#### `create(target: Callable, *args: Any) -> Task`
+
+Creates a new task and adds it to the scheduler.
+
+- `target` (Callable): The function or method to be executed by the task.
+- `*args` (Any): Arguments to be passed to the target function.
+
+#### `run_all_tasks()`
+
+Runs all tasks in the scheduler.
 
 ## Example
 
@@ -55,9 +53,16 @@ def daily_task():
 
 # Create a task scheduler
 scheduler = TaskScheduler()
+scheduler.create(daily_task)
 
-# Schedule a daily task
+# Schedule a daily task (automatically triggered, no manual execution needed)
 daily_task = scheduler.daily(daily_task, recur_every=1)
 
-# Run all scheduled tasks
-scheduler.run_all_tasks()
+## Notes
+
+- Currently, only daily tasks are supported.
+- The implementation utilizes thread sleeping for improved performance during task scheduling.
+
+## Contribution
+
+Contributions are welcome! Feel free to open issues or submit pull requests.
